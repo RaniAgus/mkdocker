@@ -1,27 +1,28 @@
 include .env
 
-TAG := agusrani/make-docker-example
-IDS != docker ps | grep $(TAG) | awk '{ print $$1 }'
+IMAGE := agusrani/make-docker-example
+CONTAINERS != docker container ls -q --filter ancestor=$(IMAGE)
 
 all: build run
 
 build:
-	docker build . --rm -t $(TAG)
+	docker build . --rm -t $(IMAGE)
 
 run:
-	docker run --rm -d --init --env-file=./.env -p $(PORT):$(PORT) $(TAG)
+	docker run --rm -d --init --env-file=./.env -p $(PORT):$(PORT) $(IMAGE)
 
 stop:
-	echo $(IDS) | tr ' ' '\n' | xargs --no-run-if-empty docker stop
+	docker container stop $(CONTAINERS)
 
 clean:
-	-docker rmi $(TAG)
+	-docker container rm $(shell docker container ls -aq --filter ancestor=$(TAG))
+	-docker rmi $(IMAGE)
 	-docker image prune
 
 exec:
-	docker exec -it $(word 1,$(IDS)) /bin/ash
+	docker exec -it $(word 1,$(CONTAINERS)) /bin/ash
 
 logs:
-	docker logs $(word 1,$(IDS)) -f
+	docker logs $(word 1,$(CONTAINERS)) -f
 
 .PHONY: all build run stop clean exec logs
