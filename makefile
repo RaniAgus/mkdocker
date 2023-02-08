@@ -1,6 +1,5 @@
 include .env
 
-IMAGE := agusrani/make-docker-example
 CONTAINERS != docker container ls -q --filter ancestor=$(IMAGE)
 
 all: build run
