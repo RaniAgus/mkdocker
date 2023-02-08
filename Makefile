@@ -1,7 +1,7 @@
 include .env
 
 ifndef IMAGE_TAG
-$(error IMAGE_TAG variable is not set. Ensure that an .env file is created an properly configured.)
+$(error IMAGE_TAG variable is not set. Ensure that an .env file is created and properly configured.)
 endif
 
 CONTAINERS_RUNNING != docker container ls -q --filter ancestor=$(IMAGE_TAG)
@@ -31,10 +31,5 @@ exec:
 
 logs:
 	docker logs $(word 1,$(CONTAINERS_RUNNING)) -f
-
-test:
-	@echo "IMAGE_TAG: $(IMAGE_TAG)"
-	@echo "CONTAINERS_RUNNING: $(CONTAINERS_RUNNING)"
-	@echo "CONTAINERS: $(CONTAINERS)"
 
 .PHONY: all build run stop clean exec logs
