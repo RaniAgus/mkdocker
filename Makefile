@@ -25,7 +25,6 @@ ifdef CONTAINERS
 	-docker container rm $(CONTAINERS)
 endif
 	-docker rmi $(IMAGE_TAG)
-	-docker image prune
 
 exec:
 	docker exec -it $(word 1,$(CONTAINERS_RUNNING)) /bin/ash
